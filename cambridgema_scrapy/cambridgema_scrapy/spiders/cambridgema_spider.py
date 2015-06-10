@@ -50,5 +50,6 @@ class CambridgemaSpider(Spider):
 
         NEXT_PAGE_XPATH = '//table[@id="gvSearchResults"]/tbody/tr/td[@colspan="7"]/table/tr/td[span]/following-sibling::td[1]/a/@href'
 
+        next_page_link = sel.xpath(NEXT_PAGE_XPATH).extract()
+        next_page_link = next_page_link[0].strip() if next_page_link else ''
 
-        
