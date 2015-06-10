@@ -3,7 +3,7 @@ from scrapy.http import FormRequest
 
 
 class CambridgemaSpider(Spider):
-    name = 'cambridge'
+    name = 'cambridgema'
     allowed_domains = ['cambridgema.gov']
     start_urls = ['https://www.cambridgema.gov/propertydatabase/',]
     BASE_URL = 'https://www.cambridgema.gov'
@@ -32,7 +32,7 @@ class CambridgemaSpider(Spider):
                   'ctl00$Primary$PropertyDBSearch$txtAdvLotNum':'',
                   'ctl00$Primary$PropertyDBSearch$txtAdvUnit':'',
                   'ctl00$Primary$PropertyDBSearch$btnAdvancedSearchSubmit':'Search'}
-        yield FormRequest(url=url, formdata=params)
+        yield FormRequest(url=url, formdata=params, callback=self.parse_database_list)
 
     def parse_database_list(self, response):
         sel = Selector(response)
@@ -44,8 +44,11 @@ class CambridgemaSpider(Spider):
             for property_db_link in property_db_links:
                 property_db_url = self.BASE_URL+property_db_link
 
+
         else:
             return
 
+        NEXT_PAGE_XPATH = '//table[@id="gvSearchResults"]/tbody/tr/td[@colspan="7"]/table/tr/td[span]/following-sibling::td[1]/a/@href'
 
 
+        
