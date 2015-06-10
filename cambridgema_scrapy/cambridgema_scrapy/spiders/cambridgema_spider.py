@@ -39,4 +39,8 @@ class CambridgemaSpider(Spider):
 
         PROPERTY_DB_XPATH = '//table[@id="gvSearchResults"]/tbody/tr/td[2]/a/@href'
 
+        property_db_links = sel.xpath(PROPERTY_DB_XPATH).extract()
+        
+
+
 
