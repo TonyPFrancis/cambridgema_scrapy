@@ -1,5 +1,6 @@
 from scrapy import Spider, Selector
 from scrapy.http import FormRequest
+import re
 
 
 class CambridgemaSpider(Spider):
@@ -52,4 +53,6 @@ class CambridgemaSpider(Spider):
 
         next_page_link = sel.xpath(NEXT_PAGE_XPATH).extract()
         next_page_link = next_page_link[0].strip() if next_page_link else ''
-
+        if next_page_link:
+            ids = re.findall(r'\(\'(.*)?\',\'(.*)?\'', next_page_link, re.I)
+            target, argument = ids[0] if ids else ('', '')
