@@ -1,4 +1,4 @@
-from scrapy import Spider
+from scrapy import Spider, Selector
 from scrapy.http import FormRequest
 
 
@@ -32,6 +32,11 @@ class CambridgemaSpider(Spider):
                   'ctl00$Primary$PropertyDBSearch$txtAdvLotNum':'',
                   'ctl00$Primary$PropertyDBSearch$txtAdvUnit':'',
                   'ctl00$Primary$PropertyDBSearch$btnAdvancedSearchSubmit':'Search'}
+        yield FormRequest(url=url, formdata=params)
 
+    def parse_database_list(self, response):
+        sel = Selector(response)
+
+        PROPERTY_DB_XPATH = '//table[@id="gvSearchResults"]/tbody/tr/td[2]/a/@href'
 
 
