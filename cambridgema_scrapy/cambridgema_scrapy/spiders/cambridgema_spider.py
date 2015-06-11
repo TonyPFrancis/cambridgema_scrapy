@@ -14,11 +14,13 @@ class CambridgemaSpider(Spider):
 
         __VIEWSTATE_XPATH = '//input[@id="__VIEWSTATE"]/@value'
         __VIEWSTATEGENERATOR_XPATH = '//input[@id="__VIEWSTATEGENERATOR"]/@value'
+        __EVENTVALIDATION_XPATH = '//input[@id="__EVENTVALIDATION"]/@value'
 
         __VIEWSTATE = sel.xpath(__VIEWSTATE_XPATH).extract()
         __VIEWSTATE = __VIEWSTATE[0] if __VIEWSTATE else ''
         __VIEWSTATEGENERATOR = sel.xpath(__VIEWSTATEGENERATOR_XPATH).extract()
         __VIEWSTATEGENERATOR = __VIEWSTATEGENERATOR[0] if __VIEWSTATEGENERATOR else ''
+        __EVENTVALIDATION
 
         url = 'https://www.cambridgema.gov/propertydatabase/'
         params = {'__VIEWSTATE': __VIEWSTATE,
