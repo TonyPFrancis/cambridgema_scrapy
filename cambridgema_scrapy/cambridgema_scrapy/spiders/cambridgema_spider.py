@@ -56,7 +56,8 @@ class CambridgemaSpider(Spider):
 
         LAST_INDEX_XPATH = '//table[@id="gvSearchResults"]/tbody/tr/td[@colspan="7"]/table/tr/td/a[text()="Last Page"]/@href'
 
-        
+        last_page_link = sel.xpath(LAST_INDEX_XPATH).extract()
+        last_page_link = last_page_link[0].strip() if last_page_link else ''
 
     def parse_database_list(self, response):
         sel = Selector(response)
