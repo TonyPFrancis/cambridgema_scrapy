@@ -52,15 +52,30 @@ class CambridgemaSpider(Spider):
     def get_database_list_limit(self, response):
         sel = Selector(response)
 
-        inspect_response(response)
-
         LAST_INDEX_XPATH = '//table[@id="gvSearchResults"]/tbody/tr/td[@colspan="7"]/table/tr/td/a[text()="Last Page"]/@href'
+        __VIEWSTATE_XPATH = '//input[@id="__VIEWSTATE"]/@value'
+        __VIEWSTATEGENERATOR_XPATH = '//input[@id="__VIEWSTATEGENERATOR"]/@value'
+        __EVENTVALIDATION_XPATH = '//input[@id="__EVENTVALIDATION"]/@value'
 
         last_page_link = sel.xpath(LAST_INDEX_XPATH).extract()
         last_page_link = last_page_link[0].strip() if last_page_link else ''
         if last_page_link:
             ids = re.findall(r'\(\'(.*)?\',\'(.*)?\'', last_page_link, re.I)
             target, argument = ids[0] if ids else ('', '')
+            if target and argument:
+                __VIEWSTATE = sel.xpath(__VIEWSTATE_XPATH).extract()
+                __VIEWSTATE = __VIEWSTATE[0] if __VIEWSTATE else ''
+                __VIEWSTATEGENERATOR = sel.xpath(__VIEWSTATEGENERATOR_XPATH).extract()
+                __VIEWSTATEGENERATOR = __VIEWSTATEGENERATOR[0] if __VIEWSTATEGENERATOR else ''
+                __EVENTVALIDATION = sel.xpath(__EVENTVALIDATION_XPATH).extract()
+                __EVENTVALIDATION = __EVENTVALIDATION[0] if __EVENTVALIDATION else ''
+                url = 'https://www.cambridgema.gov/propertydatabase/'
+                params = {'__EVENTTARGET': target,
+                          '__EVENTARGUMENT': argument,
+                          '__VIEWSTATE': __VIEWSTATE,
+                          '__VIEWSTATEGENERATOR': __VIEWSTATEGENERATOR,
+                          '__EVENTVALIDATION': __EVENTVALIDATION}
+                yield FormRequest(url=url, formdata=params, callback=self.parse_database_list)
 
     def parse_database_list(self, response):
         sel = Selector(response)
