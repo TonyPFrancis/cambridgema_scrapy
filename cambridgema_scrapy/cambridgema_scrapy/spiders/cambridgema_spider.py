@@ -87,4 +87,5 @@ class CambridgemaSpider(Spider):
                           '__VIEWSTATE': __VIEWSTATE,
                           '__VIEWSTATEGENERATOR': __VIEWSTATEGENERATOR,
                           '__EVENTVALIDATION': __EVENTVALIDATION}
+                yield FormRequest(url=url, formdata=params, callback=self.parse_database_list)
 
