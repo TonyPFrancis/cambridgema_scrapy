@@ -74,6 +74,7 @@ class CambridgemaSpider(Spider):
             ids = re.findall(r'\(\'(.*)?\',\'(.*)?\'', next_page_link, re.I)
             target, argument = ids[0] if ids else ('', '')
             if target and argument:
+                print target, argument
                 __VIEWSTATE = sel.xpath(__VIEWSTATE_XPATH).extract()
                 __VIEWSTATE = __VIEWSTATE[0] if __VIEWSTATE else ''
                 __VIEWSTATEGENERATOR = sel.xpath(__VIEWSTATEGENERATOR_XPATH).extract()
@@ -82,4 +83,8 @@ class CambridgemaSpider(Spider):
                 __EVENTVALIDATION = __EVENTVALIDATION[0] if __EVENTVALIDATION else ''
                 url = 'https://www.cambridgema.gov/propertydatabase/'
                 params = {'__EVENTTARGET': target,
-                          '__EVENTARGUMENT': argument}
+                          '__EVENTARGUMENT': argument,
+                          '__VIEWSTATE': __VIEWSTATE,
+                          '__VIEWSTATEGENERATOR': __VIEWSTATEGENERATOR,
+                          '__EVENTVALIDATION': __EVENTVALIDATION}
+
