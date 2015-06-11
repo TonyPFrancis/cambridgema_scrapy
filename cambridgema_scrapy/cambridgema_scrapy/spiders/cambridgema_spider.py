@@ -20,7 +20,8 @@ class CambridgemaSpider(Spider):
         __VIEWSTATE = __VIEWSTATE[0] if __VIEWSTATE else ''
         __VIEWSTATEGENERATOR = sel.xpath(__VIEWSTATEGENERATOR_XPATH).extract()
         __VIEWSTATEGENERATOR = __VIEWSTATEGENERATOR[0] if __VIEWSTATEGENERATOR else ''
-        __EVENTVALIDATION
+        __EVENTVALIDATION = sel.xpath(__EVENTVALIDATION_XPATH).extract()
+        __EVENTVALIDATION = __EVENTVALIDATION[0] if __EVENTVALIDATION else ''
 
         url = 'https://www.cambridgema.gov/propertydatabase/'
         params = {'__VIEWSTATE': __VIEWSTATE,
