@@ -63,8 +63,10 @@ class CambridgemaSpider(Spider):
         else:
             return
 
-        inspect_response(response)
         NEXT_PAGE_XPATH = '//table[@id="gvSearchResults"]/tbody/tr/td[@colspan="7"]/table/tr/td[span]/following-sibling::td[1]/a/@href'
+        __VIEWSTATE_XPATH = '//input[@id="__VIEWSTATE"]/@value'
+        __VIEWSTATEGENERATOR_XPATH = '//input[@id="__VIEWSTATEGENERATOR"]/@value'
+        __EVENTVALIDATION_XPATH = '//input[@id="__EVENTVALIDATION"]/@value'
 
         next_page_link = sel.xpath(NEXT_PAGE_XPATH).extract()
         next_page_link = next_page_link[0].strip() if next_page_link else ''
@@ -72,5 +74,12 @@ class CambridgemaSpider(Spider):
             ids = re.findall(r'\(\'(.*)?\',\'(.*)?\'', next_page_link, re.I)
             target, argument = ids[0] if ids else ('', '')
             if target and argument:
+                __VIEWSTATE = sel.xpath(__VIEWSTATE_XPATH).extract()
+                __VIEWSTATE = __VIEWSTATE[0] if __VIEWSTATE else ''
+                __VIEWSTATEGENERATOR = sel.xpath(__VIEWSTATEGENERATOR_XPATH).extract()
+                __VIEWSTATEGENERATOR = __VIEWSTATEGENERATOR[0] if __VIEWSTATEGENERATOR else ''
+                __EVENTVALIDATION = sel.xpath(__EVENTVALIDATION_XPATH).extract()
+                __EVENTVALIDATION = __EVENTVALIDATION[0] if __EVENTVALIDATION else ''
                 url = 'https://www.cambridgema.gov/propertydatabase/'
-                params
+                params = {'__EVENTTARGET': target,
+                          '__EVENTARGUMENT': argument}
