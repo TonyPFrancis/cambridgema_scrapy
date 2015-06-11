@@ -47,7 +47,16 @@ class CambridgemaSpider(Spider):
                   'ctl00$Primary$PropertyDBSearch$txtAdvLotNum':'',
                   'ctl00$Primary$PropertyDBSearch$txtAdvUnit':'',
                   'ctl00$Primary$PropertyDBSearch$btnAdvancedSearchSubmit':'Search'}
-        yield FormRequest(url=url, formdata=params, callback=self.parse_database_list)
+        yield FormRequest(url=url, formdata=params, callback=self.get_database_list_limit)
+
+    def get_database_list_limit(self, response):
+        sel = Selector(response)
+
+        inspect_response(response)
+
+        LAST_INDEX_XPATH = '//table[@id="gvSearchResults"]/tbody/tr/td[@colspan="7"]/table/tr/td/a[text()="Last Page"]/@href'
+
+        
 
     def parse_database_list(self, response):
         sel = Selector(response)
@@ -55,10 +64,11 @@ class CambridgemaSpider(Spider):
         PROPERTY_DB_XPATH = '//table[@id="gvSearchResults"]/tbody/tr/td[2]/a/@href'
 
         property_db_links = sel.xpath(PROPERTY_DB_XPATH).extract()
+        print "*** property_db_links"
+        print property_db_links
         if property_db_links:
             for property_db_link in property_db_links:
                 property_db_url = self.BASE_URL+property_db_link
-                print property_db_url
 
         else:
             return
@@ -70,11 +80,15 @@ class CambridgemaSpider(Spider):
 
         next_page_link = sel.xpath(NEXT_PAGE_XPATH).extract()
         next_page_link = next_page_link[0].strip() if next_page_link else ''
+        print "*** next_page_link"
+        print next_page_link
+        if not next_page_link:
+            inspect_response(response)
         if next_page_link:
             ids = re.findall(r'\(\'(.*)?\',\'(.*)?\'', next_page_link, re.I)
             target, argument = ids[0] if ids else ('', '')
+            print target, argument
             if target and argument:
-                print target, argument
                 __VIEWSTATE = sel.xpath(__VIEWSTATE_XPATH).extract()
                 __VIEWSTATE = __VIEWSTATE[0] if __VIEWSTATE else ''
                 __VIEWSTATEGENERATOR = sel.xpath(__VIEWSTATEGENERATOR_XPATH).extract()
