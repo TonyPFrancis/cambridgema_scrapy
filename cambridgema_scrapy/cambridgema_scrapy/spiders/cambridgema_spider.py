@@ -58,6 +58,9 @@ class CambridgemaSpider(Spider):
 
         last_page_link = sel.xpath(LAST_INDEX_XPATH).extract()
         last_page_link = last_page_link[0].strip() if last_page_link else ''
+        if last_page_link:
+            ids = re.findall(r'\(\'(.*)?\',\'(.*)?\'', last_page_link, re.I)
+            target, argument = ids[0] if ids else ('', '')
 
     def parse_database_list(self, response):
         sel = Selector(response)
