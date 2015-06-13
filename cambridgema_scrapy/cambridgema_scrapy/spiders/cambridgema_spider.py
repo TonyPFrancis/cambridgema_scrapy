@@ -88,6 +88,7 @@ class CambridgemaSpider(Spider):
         if property_db_links:
             for property_db_link in property_db_links:
                 property_db_url = self.BASE_URL+property_db_link
+                print property_db_url
 
         else:
             return
@@ -106,6 +107,7 @@ class CambridgemaSpider(Spider):
         if next_page_link:
             ids = re.findall(r'\(\'(.*)?\',\'(.*)?\'', next_page_link, re.I)
             target, argument = ids[0] if ids else ('', '')
+            print "*** target, argument"
             print target, argument
             if target and argument:
                 __VIEWSTATE = sel.xpath(__VIEWSTATE_XPATH).extract()
